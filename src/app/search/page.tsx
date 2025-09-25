@@ -6,7 +6,7 @@ import SearchBar from "@/components/SearchBar";
 import CountryCard from "@/components/CountryCard";
 
 type Country = {
-    _id: string;
+    id: string;
     name_common: string;
     capital: string[];
     flag: string | null;
@@ -24,7 +24,6 @@ export default function SearchPage() {
     const [countries, setCountries] = useState<Country[]>([]);
     const [meta, setMeta] = useState<any>(null);
     const [loading, setLoading] = useState(false);
-    console.log(countries)
 
     const fetchData = async () => {
         setLoading(true);
@@ -44,7 +43,6 @@ export default function SearchPage() {
         params.set("sort", e.target.value);
         router.push(`/search?${params.toString()}`);
     };
-
     return (
         <div className="p-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
             {/* Top Bar */}
@@ -71,9 +69,9 @@ export default function SearchPage() {
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {countries.map((c) => (
      <CountryCard
-      key={c._id}
+      key={c.id}
       country={{
-        id: c._id,
+        id: c.id,
         name: c.name_common,             
         cca3: c.cca3,
         capital: Array.isArray(c.capital) ? c.capital[0] : c.capital || "N/A",

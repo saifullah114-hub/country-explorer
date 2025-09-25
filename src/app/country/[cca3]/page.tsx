@@ -1,3 +1,4 @@
+import { getCountryByCode } from "@/lib/dataService";
 import Link from "next/link";
 
 type Props = {
@@ -6,21 +7,12 @@ type Props = {
 };
 
 export default async function CountryDetails({ params, searchParams }: Props) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/countries/${params.cca3}`, {
-  cache: "no-store",
-});
+  const country = await getCountryByCode(params.cca3);
 
-
-  if (!res.ok) {
+  if (!country ) {
     return <div className="p-6 text-center text-red-500">❌ Country not found</div>;
   }
-
-  const country = await res.json();
-
-  if (!country || !country.name_common) {
-    return <div className="p-6 text-center text-red-500">❌ Country not found</div>;
-  }
-
+  // preserve query params for back button
   const query = new URLSearchParams(
     Object.entries(searchParams).reduce((acc, [key, val]) => {
       if (typeof val === "string") acc[key] = val;
@@ -43,13 +35,13 @@ export default async function CountryDetails({ params, searchParams }: Props) {
         <div className="bg-gray-100 flex justify-center items-center h-48">
           <img
             src={country.flag || ""}
-            alt={country.name_common}
+            alt={country.name}
             className="h-full w-full object-fill"
           />
         </div>
 
         <div className="p-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">{country.name_common}</h1>
+          <h1 className="text-3xl font-bold text-gray-800">{country.name}</h1>
           {country.officialName && (
             <p className="text-gray-500 text-lg mt-1">{country.officialName}</p>
           )}
@@ -60,9 +52,7 @@ export default async function CountryDetails({ params, searchParams }: Props) {
           <div>
             <h3 className="text-sm font-semibold text-gray-500">🏙 Capital</h3>
             <p className="text-lg font-medium text-gray-800">
-              {Array.isArray(country.capital) && country.capital.length > 0
-                ? country.capital.join(", ")
-                : "N/A"}
+              {country.capital || "N/A"}
             </p>
           </div>
           <div>
@@ -80,9 +70,7 @@ export default async function CountryDetails({ params, searchParams }: Props) {
           <div>
             <h3 className="text-sm font-semibold text-gray-500">💰 Currencies</h3>
             <p className="text-lg font-medium text-gray-800">
-              {Array.isArray(country.currencies_list) && country.currencies_list.length > 0
-                ? country.currencies_list.join(", ")
-                : "N/A"}
+              {country.currencies || "N/A"}
             </p>
           </div>
         </div>

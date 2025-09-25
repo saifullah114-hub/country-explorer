@@ -7,7 +7,6 @@ const FIELDS = "name,flags,capital,region,subregion,cca2,cca3,population,currenc
 
 async function main() {
   await mongoose.connect(MONGO_URI);
-  console.log("Connected to Mongo");
 
   const { data } = await axios.get(`https://restcountries.com/v3.1/all?fields=${FIELDS}`);
   if (!Array.isArray(data)) throw new Error("Unexpected API response");
@@ -36,9 +35,7 @@ async function main() {
     }
   }
 
-  console.log("Seeding finished");
   await mongoose.disconnect();
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
-//create log table if there is any issue
