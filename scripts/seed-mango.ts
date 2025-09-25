@@ -14,7 +14,7 @@ async function main() {
   for (const c of data) {
    const doc = {
   name: c.name || {},
-  name_common: c.name?.common || "",   // 👈 important
+  name_common: c.name?.common || "",   
   cca2: c.cca2 || null,
   cca3: c.cca3 || null,
   capital: Array.isArray(c.capital) ? c.capital : [],
@@ -24,7 +24,7 @@ async function main() {
   population: c.population || 0,
   currencies: c.currencies || null,
   currencies_list: c.currencies
-    ? Object.values(c.currencies).map((v: any) => v.name)
+    ? Object.values(c.currencies)?.map((v: any) => v.name)
     : [],
   latlng: c.latlng || [],
 };

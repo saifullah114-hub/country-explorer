@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import {  getCountryByCode } from "@/lib/dataService";
+import { getCountryByCode } from "@/lib/dataService";
 
-export async function GET(_: Request, { params }: { params: { cca3: string } }) {
+export async function GET(req: Request, { params }: { params: { cca3: string } }) {
   try {
     const result = await getCountryByCode(params.cca3.toUpperCase());
     if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });

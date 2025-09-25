@@ -1,216 +1,194 @@
-🌍 Country Explorer
+# 🌍 Country Explorer
 
-This is a Next.js
- + MongoDB
- project bootstrapped with create-next-app
-.
+A full-stack Country Explorer built with **Next.js** (App Router), **MongoDB**, and **TailwindCSS**.
+Fetches data from the [REST Countries API](https://restcountries.com/), seeds and stores it in a local MongoDB (Docker), and exposes fast, fuzzy, paginated searches and detailed country views.
 
-It allows users to explore countries, search with filters, and view detailed information — all powered by data seeded from the REST Countries API
-.
+## ✨ Features
 
-Getting Started
-1. Install dependencies
+### 🏠 Home
+- Full-screen background with overlay
+- Centered search bar with continent filter
+- Debounced, fuzzy autocomplete suggestions (Fuse.js)
+- Infinite scroll in suggestions
+
+### 🔍 Search Results
+- Compact search bar
+- Grid of country cards (flag, name, capital, region, currency, population)
+- Sortable by name / capital / currency
+- Pagination
+- Filters and sort preserved in URL query params
+
+### 📄 Country Details
+- Dedicated page with flag banner
+- Official name, capital, region, subregion, population, currencies, languages, timezones, borders
+- Back button returns to search with previous filters preserved
+
+### 🗄️ Data Layer
+- Local MongoDB seed from REST Countries
+- `USE_DB` toggle to switch between local DB and remote REST API
+- Centralized `lib/dataService.ts` abstraction (DB/API switching, normalization)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js** (v18+ recommended)
+- **Docker & Docker Compose** (for local MongoDB)
+
+### 1. Clone
+```bash
+git clone https://github.com/<your-username>/country-explorer.git
+cd country-explorer
+```
+
+### 2. Install
+```bash
 npm install
+```
 
-2. Start MongoDB with Docker
+### 3. Start MongoDB (Docker)
+```bash
 docker-compose up -d
+```
 
-3. Seed the database
-npm run seed:mongo
+### 4. Environment
+Create `.env.local` in the project root (do not commit this file):
 
-4. Run the development server
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-
-
-Open http://localhost:3000
- in your browser to see the app.
-
-Features
-
-Home Page
-
-Full-screen background with overlay
-
-Search bar with continent filter and debounced fuzzy search
-
-Infinite scroll in suggestions
-
-Search Results Page
-
-Compact search bar reused
-
-Grid of country cards with flag, name, capital, region, currency, population
-
-Sortable by Name, Capital, or Currency
-
-Paginated results
-
-Filters preserved in URL query params
-
-Country Details Page
-
-Dedicated country detail view
-
-Flag banner, Name, Official Name, Capital, Region, Subregion, Population, Currencies
-
-Languages, Timezones, and Border countries
-
-Back button returns to Search with previous filters
-
-Environment Variables
-
-Create a .env.local file in your project root:
-
+```env
 MONGO_URI=mongodb://localhost:27017/country_explorer
 USE_DB=true
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 RESTCOUNTRIES_FIELDS=name,cca3,flags,capital,region,subregion,currencies,population,area,languages,timezones,borders,latlng
+```
 
-Reseeding Data
+- `USE_DB=true` → use local MongoDB (recommended for speed)
+- `USE_DB=false` → fallback to REST Countries API (no local DB required)
 
-To reseed the database with fresh data:
+### 5. Seed the database
+```bash
+npm run seed:mongo
+```
 
-# Open a Mongo shell
-docker exec -it country_mongo mongosh
+### 6. Run dev server
+```bash
+npm run dev
+```
 
-# Use the DB
-use country_explorer
+Open: [http://localhost:3000](http://localhost:3000)
 
-# Drop the old collection
-db.countries.drop()
+## 🔄 Reseeding / Reset DB
 
-# Exit
-exit
+To drop and reseed:
+
+```bash
+# Drop countries collection (via Docker container)
+docker exec -it country_mongo mongosh --eval "use country_explorer; db.countries.drop();"
 
 # Reseed
 npm run seed:mongo
+```
 
-Learn More
+> **Note:** There is a `seed_logs` collection created by the seeder to track success/failure of each run.
 
-To learn more about the tools used in this project:
+## ⚙️ Environment Variables
 
-Next.js Documentation
- – features, API, and guides.
+Add a `.env.example` (placeholders only) to repo so others know required vars:
 
-MongoDB Documentation
- – database engine details.
-
-TailwindCSS Documentation
- – styling utilities.
-
-REST Countries API
- – the
-
-You said:
-like you are giving 🌍 Country Explorer
-but sholdnt it be #Country explorer so that it know its heading
-ChatGPT said:
-
-Exactly 👍 You’re right — GitHub READMEs use Markdown headings (#) for section titles.
-The emojis 🌍 etc. are optional flair, but the important part is the # / ## syntax so GitHub recognizes them as headings.
-
-Here’s your README rewritten formally with Markdown headings:
-
-Country Explorer
-
-This is a Next.js
- + MongoDB
- project bootstrapped with create-next-app
-.
-
-It allows users to explore countries, search with filters, and view detailed information — all powered by data seeded from the REST Countries API
-.
-
-Getting Started
-1. Install dependencies
-npm install
-
-2. Start MongoDB with Docker
-docker-compose up -d
-
-3. Seed the database
-npm run seed:mongo
-
-4. Run the development server
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-
-
-Open http://localhost:3000
- in your browser to see the app.
-
-Features
-Home Page
-
-Full-screen background with overlay
-
-Search bar with continent filter and debounced fuzzy search
-
-Infinite scroll in suggestions
-
-Search Results Page
-
-Compact search bar reused
-
-Grid of country cards with flag, name, capital, region, currency, population
-
-Sortable by Name, Capital, or Currency
-
-Paginated results
-
-Filters preserved in URL query params
-
-Country Details Page
-
-Dedicated country detail view
-
-Flag banner, Name, Official Name, Capital, Region, Subregion, Population, Currencies
-
-Languages, Timezones, and Border countries
-
-Back button returns to Search with previous filters
-
-Environment Variables
-
-Create a .env.local file in your project root:
-
+```env
 MONGO_URI=mongodb://localhost:27017/country_explorer
 USE_DB=true
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 RESTCOUNTRIES_FIELDS=name,cca3,flags,capital,region,subregion,currencies,population,area,languages,timezones,borders,latlng
+```
 
-Reseeding Data
+> **Important:** Add `.env*` files to `.gitignore` (see below).
 
-To reseed the database with fresh data:
+## 🏗️ Architecture Decisions
 
-# Open a Mongo shell
-docker exec -it country_mongo mongosh
+- **Next.js (App Router)**: single framework for UI and API routes; server components where appropriate
+- **MongoDB + Mongoose**: flexible schema for REST Countries nested data; fast local queries
+- **Fuse.js**: fuzzy search to tolerate minor typos in user input
+- **Data abstraction**: `lib/dataService.ts` centralizes data access and normalization; switching source is a single flag (`USE_DB`)
+- **UI/UX**: skeleton loaders and a `FlagImage` component for graceful image loading/fallback. Debounced inputs and infinite scroll avoid excessive network calls
+- **Error handling**: API routes return consistent `{ data, meta }` or `{ error }` shapes; seed script logs results to `seed_logs`
 
-# Use the DB
-use country_explorer
+## 📋 Assumptions
 
-# Drop the old collection
-db.countries.drop()
+- Primary key for countries is `cca3`. If `_id` exists (DB mode), it is used internally; UI relies on a stable `id` (falls back to `cca3`)
+- `capital` may be an array in source data — UI shows the first value
+- `currencies_list` (array of currency names) is created during seeding for easier display; fallbacks exist if missing
+- If the local DB is not present (or `USE_DB=false`), app functionality remains available using live REST API (slower)
 
-# Exit
-exit
+## 📁 Project Structure (important files)
 
-# Reseed
-npm run seed:mongo
+```
+.
+├── app/
+│   ├── api/
+│   │   └── countries/
+│   │       ├── route.ts                # GET paginated countries → calls dataService
+│   │       ├── suggestions/route.ts    # GET suggestions → calls dataService
+│   │       └── [cca3]/route.ts         # GET country by cca3 → calls dataService
+│   ├── country/[cca3]/page.tsx         # Country details page (server component)
+│   ├── search/page.tsx                 # Search results (client component)
+│   └── page.tsx                        # Home / hero page
+├── components/
+│   ├── SearchBar.tsx
+│   ├── CountryCard.tsx
+│   ├── FlagImage.tsx
+├── lib/
+│   ├── mongo.ts                        # connectMongo()
+│   └── dataService.ts                  # getCountries, getCountryByCode, getSuggestions
+├── models/
+│   ├── Country.ts                      # Mongoose schema
+├── scripts/
+│   └── seed-mongo.ts                   # Seeder (creates countries + seed_logs)
+├── package.json
+└── README.md
+```
 
-Learn More
+## 📜 NPM Scripts
 
-Next.js Documentation
+```json
+{
+  "scripts": {
+   "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed:mongo": "ts-node scripts/seed-mango.ts"
+  }
+}
+```
 
-MongoDB Documentation
+## 📝 .gitignore (suggested)
 
-TailwindCSS Documentation
+```gitignore
+# dependencies
+/node_modules
 
-REST Countries API
+# builds
+/.next
+/out
+/.turbo
+
+# env
+.env
+.env.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+```
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js (App Router), TailwindCSS
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Mongoose
+- **Search**: Fuse.js (fuzzy search)
+- **Data Source**: REST Countries API
+- **Containerization**: Docker & Docker Compose
+
+---

@@ -7,8 +7,8 @@ import debounce from "lodash.debounce";
 const continents = ["Africa", "Americas", "Asia", "Europe", "Oceania", "Antarctic"];
 
 type Country = {
-    _id: string;
-    name_common: string;
+    id: string;
+    name: string;
     cca3: string;
 };
 
@@ -53,7 +53,6 @@ export default function SearchBar({
     };
 
 
-    // Debounce input fetch
     const debouncedFetch = useRef(
         debounce((q: string, cont: string) => {
             setPage(1);
@@ -90,11 +89,11 @@ export default function SearchBar({
     }, [page, hasMore, query, continent]);
 
     const handleSelectSuggestion = (country: Country) => {
-        setQuery(country.name_common);
+        setQuery(country.name);
         setShowDropdown(false);
 
         const params = new URLSearchParams();
-        params.set("search", country.name_common);
+        params.set("search", country.name);
         if (continent) params.set("continent", continent);
 
         router.push(`/search?${params.toString()}`);
@@ -123,7 +122,6 @@ export default function SearchBar({
 
         router.push(`/search?${params.toString()}`);
     };
-
     return (
         <div
             className={`relative flex gap-3 ${compact
@@ -146,14 +144,13 @@ export default function SearchBar({
                         } else {
                             setShowDropdown(false);
 
-                            // 👇 if cleared, reset URL to show all countries
                             const params = new URLSearchParams();
                             if (continent) params.set("continent", continent);
                             router.push(`/search?${params.toString()}`);
                         }
                     }}
-                    onFocus={() => query && setShowDropdown(true)}  // open only when focused + has query
-                    onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // close after blur
+                    onFocus={() => query && setShowDropdown(true)} 
+                    onBlur={() => setTimeout(() => setShowDropdown(false), 200)} 
                     onKeyDown={handleKeyDown}
                 />
 
@@ -163,13 +160,13 @@ export default function SearchBar({
                         ref={dropdownRef}
                         className="absolute z-20 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-60 overflow-auto shadow-lg text-gray-900"
                     >
-                        {suggestions.map((s) => (
+                        {suggestions?.map((s) => (
                             <li
-                                key={s._id || s.cca3}
+                                key={s.id || s.cca3}
                                 className="px-3 py-2 cursor-pointer hover:bg-blue-100"
                                 onClick={() => handleSelectSuggestion(s)}
                             >
-                                {s.name_common}
+                                {s.name}
                             </li>
 
                         ))}
@@ -188,7 +185,7 @@ export default function SearchBar({
                 onChange={handleContinentChange}
             >
                 <option value="">All Continents</option>
-                {continents.map((c) => (
+                {continents?.map((c) => (
                     <option key={c} value={c}>
                         {c}
                     </option>

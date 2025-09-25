@@ -45,7 +45,6 @@ export default function SearchPage() {
     };
     return (
         <div className="p-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-            {/* Top Bar */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 bg-white shadow-md rounded-lg p-4">
                 <SearchBar compact mode="search" />
 
@@ -60,33 +59,31 @@ export default function SearchPage() {
                 </select>
             </div>
 
-            {/* Results Grid */}
-                {loading ? (
-  <div className="flex justify-center items-center h-40">
-    <div className="animate-spin rounded-full h-10 w-10 border-4 border-indigo-500 border-t-transparent"></div>
-  </div>
-) : (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {countries.map((c) => (
-     <CountryCard
-      key={c.id}
-      country={{
-        id: c.id,
-        name: c.name_common,             
-        cca3: c.cca3,
-        capital: Array.isArray(c.capital) ? c.capital[0] : c.capital || "N/A",
-        region: c.region,
-        flag: c.flag,
-        population: c.population,
-        currencies: c.currencies_list?.join(", ") || "N/A",
-      }}
-      searchParams={searchParams}
-    />
-    ))}
-  </div>
-)}
+            {loading ? (
+                <div className="flex justify-center items-center h-40">
+                    <div className="animate-spin rounded-full h-10 w-10 border-4 border-indigo-500 border-t-transparent"></div>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {countries?.map((c) => (
+                        <CountryCard
+                            key={c.id}
+                            country={{
+                                id: c.id,
+                                name: c.name_common,
+                                cca3: c.cca3,
+                                capital: Array.isArray(c.capital) ? c.capital[0] : c.capital || "N/A",
+                                region: c.region,
+                                flag: c.flag,
+                                population: c.population,
+                                currencies: c.currencies_list?.join(", ") || "N/A",
+                            }}
+                            searchParams={searchParams}
+                        />
+                    ))}
+                </div>
+            )}
 
-            {/* Pagination */}
             {meta && (
                 <div className="flex justify-center items-center mt-8 gap-4">
                     <button
