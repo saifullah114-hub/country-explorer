@@ -20,29 +20,26 @@ export async function GET(req: Request) {
       });
     }
 
-    // Mongo filter
     const filter: any = {};
     if (continent) {
       filter.region = continent;
     }
 
-    // Only fetch the fields we need (lean + projection)
+
     const baseDocs = await Country.find(filter, { name_common: 1, cca3: 1 })
-      .limit(500) // bigger batch for fuzzy search
+      .limit(500) 
       .lean();
 
-    // Safety: filter out docs missing name_common
     const safeDocs = baseDocs.filter((doc: any) => doc.name_common);
 
-    // Fuzzy search
     const fuse = new Fuse(safeDocs, {
       keys: ["name_common"],
-      threshold: 0.5, // tolerance for typos
+      threshold: 0.5, 
     });
 
     const results = fuse.search(q).map((r) => r.item);
 
-    // Paginate
+    
     const total = results.length;
     const totalPages = Math.ceil(total / limit);
     const paginated = results.slice((page - 1) * limit, page * limit);

@@ -1,4 +1,3 @@
-// src/lib/mongo.ts
 import mongoose from "mongoose";
 
 let isConnected = false;

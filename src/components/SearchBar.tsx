@@ -63,8 +63,8 @@ export default function SearchBar({
 
     useEffect(() => {
         if (query) {
-            setPage(1);        // reset to page 1
-            setHasMore(false); // reset hasMore so new query can calculate again
+            setPage(1);        
+            setHasMore(false); 
             debouncedFetch(query, continent);
         } else {
             setSuggestions([]);
@@ -73,7 +73,6 @@ export default function SearchBar({
     }, [query, continent]);
 
 
-    // Infinite scroll inside dropdown
     useEffect(() => {
         const el = dropdownRef.current;
         if (!el) return;
@@ -114,10 +113,10 @@ export default function SearchBar({
         const newContinent = e.target.value;
         setContinent(newContinent);
 
-        setQuery("");       // clear the search text
-        setPage(1);         // reset page
-        setHasMore(false);  // reset hasMore
-        setSuggestions([]); // clear old suggestions
+        setQuery("");       
+        setPage(1);         
+        setHasMore(false);  
+        setSuggestions([]); 
 
         const params = new URLSearchParams();
         if (newContinent) params.set("continent", newContinent);
@@ -159,7 +158,7 @@ export default function SearchBar({
                 />
 
 
-                {showDropdown && suggestions.length > 0 && (
+                {showDropdown && suggestions?.length > 0 && (
                     <ul
                         ref={dropdownRef}
                         className="absolute z-20 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-60 overflow-auto shadow-lg text-gray-900"
